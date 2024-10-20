@@ -38,6 +38,10 @@ async def callModelAPI(messageHist: list, model) -> str:
     data = {"model":  model,
             "messages": messageHist,
             "stream": False,
+            #according to docs -2 will cut off after context limit is met
+            #by default it's -1 which means infinite and it managed to get stuck in infinity loop for me once
+            #perhaps this should be user option
+            "options": {"num_predict": -2}
             }
 
     responseFromAPI = await requests.post(apiUrl + 'api/chat', headers=headers, data=json.dumps(data))
